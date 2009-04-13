@@ -1,0 +1,30 @@
+--------------------------------------------------------------------------------
+
+       LDAP AUTHENTICATION PLUGIN FOR TASKFREAK - last update 10/04/2009
+           AUTHOR(S): Thomas Chemineau <thomas.chemineau@gmail.com>
+
+--------------------------------------------------------------------------------
+
+
+
+
+Version 0.3.1 -- April 10, 2009
+---------------------------------
++ Add auto user creation from LDAP directory
+
+
+Version 0.3 -- February 7, 2009
+---------------------------------
++ Add auto installation through Taskfreak plugin manager
+
+
+Version 0.2
+---------------------------------
++ Correct some bugs
++ Add SSL/TLS support
+
+
+Version 0.1
+---------------------------------
++ Initial version
+

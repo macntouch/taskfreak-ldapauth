@@ -1,0 +1,149 @@
+--- tzn_user.php_default	2008-04-06 12:42:14.000000000 +0200
++++ tzn_user.php	2009-04-13 11:27:05.000000000 +0200
+@@ -166,9 +166,15 @@
+                         $this->password = "ENCODE('".$pass1."','"
+                         	.$this->salt."')";
+                         break;
+-					case 4:
+-						$this->password = "MD5('$pass1')";
+-						break;
++                    case 4:
++                        $this->password = "MD5('$pass1')";
++                        break;
++                    // 8<---- LDAP AUTHENTICATION PLUGIN --
++                    case 5:
++                        // $this->password = "MD5('$pass1')";
++                        return false ;
++                        break;
++                    // 8<---- LDAP AUTHENTICATION PLUGIN --
+                     default:
+                         $iv = mcrypt_create_iv (mcrypt_get_iv_size(MCRYPT_3DES
+                         	, MCRYPT_MODE_ECB), MCRYPT_RAND);
+@@ -305,6 +311,23 @@
+             $this->zBadAccess();
+             return false; // error or password mismatch
+             break;
++
++	// 8<---- LDAP AUTHENTICATION PLUGIN --
++	case 5:
++            if (!$this->password && !$password) {
++                break;
++            }
++            require_once dirname(__FILE__) . '/apk_ldap.php' ;
++            $ldap = new Apk_LdapConnection() ;
++            if ($ldap->connect())
++            {
++                $res = $ldap->authenticate($this->username, $password) ;
++                $ldap->disconnect() ;
++            }
++            return $res ;
++            break ;
++	// 8<---- LDAP AUTHENTICATION PLUGIN --
++
+         default:
+             for ($i = 0; $i < strlen($this->password); $i += 2) { 
+                 $passBin .= chr(hexdec(substr($s,$i,2))); 
+@@ -381,6 +404,23 @@
+ 				return false;
+ 			}
+         } else {
++            // 8<---- LDAP AUTHENTICATION PLUGIN --
++            if (TZN_USER_PASS_MODE == '5')
++            {
++                // Security tricks, to avoid indefinite loops on user creation,
++                // we put a random value into $GLOBALS['confLdapAutoCreateStatus']
++                // and just test if this array key exists. If so, we already
++                if (array_key_exists('confLdapAutoCreateStatus', $GLOBALS))
++                {
++                    return false ;
++                }
++                $GLOBALS['confLdapAutoCreateStatus'] = 0 ;
++                if ($this->autoCreateFromLdap() === true)
++                {
++                    return $this->login($username,$password,$level);
++                }
++            }
++            // 8<---- LDAP AUTHENTICATION PLUGIN --
+             $this->_error['login'] = 
+             	$GLOBALS["langTznUser"]["user_name_not_found"];
+             return false;
+@@ -536,6 +576,12 @@
+ 			$this->password = "MD5('$newpass')";
+             $this->updatePassword();
+             break;
++        // 8<---- LDAP AUTHENTICATION PLUGIN --
++        case 5:
++             $this->_error['forgot'] = "operation not allowed" ;
++             return false ;
++             break ;
++        // 8<---- LDAP AUTHENTICATION PLUGIN --
+         default:
+             $iv = mcrypt_create_iv (mcrypt_get_iv_size (MCRYPT_3DES,
+             	MCRYPT_MODE_ECB), MCRYPT_RAND);
+@@ -547,6 +593,66 @@
+         return $newpass;
+     }
+ 
++    // 8<---- LDAP AUTHENTICATION PLUGIN --
++
++    /**
++     * Check if we use LDAP authentication backend. If so, then trying
++     * to retrieve the user from the LDAP directory. If found, we auto
++     * create it into Taskfreak. Some attributes have to be defined
++     * previously into the LDAP directory.
++     * @return boolean
++     */
++    function  autoCreateFromLdap()
++    {
++        if (APK_LDAP_AUTO_USERCREATED)
++        {
++          return false ;
++        }
++        require_once dirname(__FILE__) . '/apk_ldap.php' ;
++        $ldap = new Apk_LdapConnection() ;
++        if ($ldap->connect())
++        {
++            $filter = $ldap->getFormatedFilter($username) ;
++            $usersdn = $ldap->searchDn($filter) ;
++            if (is_array($usersdn))
++            {
++                $userldap = $ldap->search($filter,
++                        $GLOBALS['confLdapAttributesMapping'],
++                        $usersdn[0], 'base') ;
++            }
++            $ldap->disconnect() ;
++        }
++        if (sizeof($userldap)>1)
++        {
++            $userldap = $userldap[0] ;
++            foreach ($GLOBALS['confLdapAttributesMapping'] as $field => $attr)
++            {
++                $userdata[$field] = $userldap[strtolower($attr)][0] ;
++            }
++            if (!array_key_exists('countryId', $userdata))
++            {
++                $userdata['countryId'] = FRK_DEFAULT_COUNTRY ;
++            }
++            $objEditItem = new Member();
++            $objEditItem->initObjectProperties();
++            $objEditItem->setAuto($userdata);
++            $objEditItem->level = APK_LDAP_AUTO_USERLEVEL ;
++            $objEditItem->enabled = APK_LDAP_AUTO_USERCREATED ? '1' : '0' ;
++            $objEditItem->author->id = 1 ;
++            $objEditItem->password = $this->getRdm(
++                    TZN_USER_PASS_MAX, "1234567890"
++                    ."abcdefghijklmnopqrstuvwxyz"
++                    ."ABCDEFGHIJKLMNOPQRSTUVWXYZ") ;
++            if ($objEditItem->add()>1)
++            {
++                return true ;
++            }
++        }
++        return false ;
++    }
++
++    // 8<---- LDAP AUTHENTICATION PLUGIN --
++
+ }
+ 
+ ?>

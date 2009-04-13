@@ -1,0 +1,18 @@
+--- user_form.php_default	2008-04-06 12:42:16.000000000 +0200
++++ user_form.php	2009-04-10 14:38:36.000000000 +0200
+@@ -63,6 +63,7 @@
+ 				<td><?php $objEditItem->qText('username'); ?></td>
+ 			</tr>
+ 			<?php
++				if (TZN_USER_PASS_MODE != 5) {
+ 				if ($objEditItem->isLoaded()) {
+ 			?>
+ 			<tr>
+@@ -83,6 +84,7 @@
+ 				<th><span class="compulsory"><?php echo $langUser['password_confirm']; ?></span>:</th>
+ 				<td><input type="password" name="password2" /></td>
+ 			</tr>
++			<?php } ?>
+ 		</table>
+ 		<?php
+ 			if ($pRegisterMessage) {

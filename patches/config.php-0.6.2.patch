@@ -1,0 +1,51 @@
+--- config.php_default	2008-04-06 12:59:37.000000000 +0200
++++ config.php	2009-04-10 14:38:22.000000000 +0200
+@@ -12,7 +12,7 @@
+ 
+ define('TZN_DB_HOST','localhost');
+ define('TZN_DB_USER','root');       // edit here
+-define('TZN_DB_PASS','');           // edit here
++define('TZN_DB_PASS','linagora');   // edit here
+ define('TZN_DB_BASE','taskfreak');  // edit here
+ define('TZN_DB_PREFIX','frk');
+ define('TZN_DB_CLASS','tzn_mysql.php');
+@@ -46,7 +46,7 @@
+ define('TZN_USER_NAME_MAX',10);		// maximum length for username
+ define('TZN_USER_PASS_MIN',3);		// minimum length for password
+ define('TZN_USER_PASS_MAX',10);		// maximum length for password
+-define('TZN_USER_PASS_MODE',4);
++define('TZN_USER_PASS_MODE',5);
+ 
+ define('TZN_FILE_RANDOM',false);
+ define('TZN_FILE_GD_VERSION',2);
+@@ -169,6 +169,30 @@
+     8 => '#999'
+ );
+ 
++// === LDAP AUTHENTICATION PLUGIN =============================
++
++define("APK_LDAP_SERVER", "localhost") ;
++define("APK_LDAP_BASEDN", "ou=people,dc=example,dc=com" ) ;
++define("APK_LDAP_BINDDN", "cn=admin,dc=example,dc=com") ;
++define("APK_LDAP_BINDPW", "admin") ;
++define("APK_LDAP_FILTER", "(uid=%s)" ) ;
++define("APK_LDAP_SCOPE", "one" ) ;
++define("APK_LDAP_VERSION", 3) ;
++define("APK_LDAP_USESSL", false) ;
++define("APK_LDAP_AUTO_USERCREATED", TRUE) ;
++define("APK_LDAP_AUTO_USERENABLED", TRUE);
++define("APK_LDAP_AUTO_USERLEVEL", 2);   // guest=1, user=2, manager=3, admin=4
++
++$GLOBALS['confLdapAttributesMapping'] = array(
++        'firstName' => 'givenName' ,
++        'lastName' => 'sn' ,
++        'email' => 'mail' ,
++        'username' => 'uid' ,
++//      'title' => 'title' ,
++//      'city' => 'l' ,
++//      'countryId' => 'c' ,
++    ) ;
++
+ // === ACCESS RIGHTS ==========================================
+ 
+ // Change access rights settings with care.
