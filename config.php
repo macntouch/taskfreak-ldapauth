@@ -3,9 +3,9 @@ $Title = "Ldap Authentication";
 $Description = "Ldap authentication for TaskFreak!";
 $Version = "0.3.1";
 $Author = "Thomas Chemineau";
-$Size = "33 K";
+$Size = "Unknow";
 # ----- Optional ---------------- #
-$Date = "2009-04-10";
+$Date = "2009-04-13";
 $Readme = "README.txt";
 $Changelog = "CHANGELOG.txt";
 $Icon = "data/icon.gif";

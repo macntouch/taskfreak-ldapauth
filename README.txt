@@ -1,6 +1,6 @@
 --------------------------------------------------------------------------------
 
-    PATCHING TASKFREAK TO ENABLE LDAP AUTHENTICATION - last update 10/04/2009
+    PATCHING TASKFREAK TO ENABLE LDAP AUTHENTICATION - last update 13/04/2009
            AUTHOR(S) : Thomas Chemineau <thomas.chemineau@gmail.com>
 
 --------------------------------------------------------------------------------
