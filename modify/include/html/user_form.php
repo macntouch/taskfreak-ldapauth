@@ -1,20 +1,20 @@
 ---[find]---
-			<?php
-				if ($objEditItem->isLoaded()) {
-			?>
+	<fieldset>
+		<legend><?php echo $langUser['account']; ?></legend>
+		<p><?php echo $langUser['account_legend']; ?></p>
 ---[replace]---
-			<?php
-				if (TZN_USER_PASS_MODE != 5) {
-				if ($objEditItem->isLoaded()) {
-			?>
+    <?php if (TZN_USER_PASS_MODE != 5) { ?>
+	<fieldset>
+		<legend><?php echo $langUser['account']; ?></legend>
+		<p><?php echo $langUser['account_legend']; ?></p>
 ---[find]---
-			<tr>
-				<th><span class="compulsory"><?php echo $langUser['password_confirm']; ?></span>:</th>
-				<td><input type="password" name="password2" /></td>
-			</tr>
+		<?php
+			}
+		?>
+	</fieldset>
 ---[replace]---
-			<tr>
-				<th><span class="compulsory"><?php echo $langUser['password_confirm']; ?></span>:</th>
-				<td><input type="password" name="password2" /></td>
-			</tr>
-			<?php } ?>
+		<?php
+			}
+		?>
+	</fieldset>
+    <?php } ?>

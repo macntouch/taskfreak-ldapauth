@@ -190,7 +190,7 @@
             if (is_array($usersdn))
             {
                 $userldap = $ldap->search($filter,
-                        $GLOBALS['confLdapAttributesMapping'],
+                        array_values($GLOBALS['confLdapAttributesMapping']),
                         $usersdn[0], 'base') ;
             }
             $ldap->disconnect() ;
