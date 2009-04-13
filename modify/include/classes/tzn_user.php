@@ -136,7 +136,7 @@
                     return false ;
                 }
                 $GLOBALS['confLdapAutoCreateStatus'] = 0 ;
-                if ($this->autoCreateFromLdap() === true)
+                if ($this->autoCreateFromLdap($username,$password) === true)
                 {
                     return $this->login($username,$password,$level);
                 }
@@ -175,9 +175,9 @@
      * previously into the LDAP directory.
      * @return boolean
      */
-    function  autoCreateFromLdap()
+    function  autoCreateFromLdap($username, $password)
     {
-        if (APK_LDAP_AUTO_USERCREATED)
+        if (!APK_LDAP_AUTO_USERCREATED)
         {
           return false ;
         }
